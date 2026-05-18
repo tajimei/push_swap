@@ -222,9 +222,8 @@ Grading targets:
 AI (Claude) was used during this project for the following tasks:
 
 - **Algorithm design discussion** — comparing the trade-offs between radix sort, chunk sort, and Turkish sort for this specific problem model.
-- **Debugging** — identifying the LSD radix sort bit-inversion issue caused by `pa` reversing stack b order.
-- **Code review** — checking for Norm compliance (variable declaration placement, function length).
-- **README drafting** — structuring the algorithm explanations and complexity arguments.
+- **Understanding the assignment** — translating and interpreting the subject requirements.
+- **README drafting** — assisting with translation and documentation writing.
 
 All generated code and explanations were reviewed, tested, and understood by both team members before inclusion in the project.
 
@@ -452,8 +451,7 @@ rank変換済みの値（0〜n-1）を √n 個のチャンクに分割します
 このプロジェクトでは、以下の用途でAI（Claude）を使用しました：
 
 - **アルゴリズム選定の議論** — radixソート・チャンクソート・Turkish sortの比較検討と、このスタックモデルにおけるトレードオフの整理
-- **デバッグ** — `pa` によるスタックb反転が原因のLSD基数ソートのビット反転バグの特定
-- **コードレビュー** — Normへの準拠（変数宣言位置、関数の長さ）の確認
-- **README作成** — アルゴリズム説明と計算量引数の構造化
+- **課題の理解** - subjectの翻訳
+- **README作成** — 翻訳など本ファイル作成の補助
 
 生成されたコードや説明はすべて、両メンバーがプロジェクトへの組み込み前にレビュー・テスト・理解を行っています。
