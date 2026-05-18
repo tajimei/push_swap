@@ -228,7 +228,7 @@ AI (Claude) was used during this project for the following tasks:
 
 All generated code and explanations were reviewed, tested, and understood by both team members before inclusion in the project.
 
-*このプロジェクトは、42カリキュラムの一環として \<login1\>、\<login2\> によって作成されました。*
+*以下日本語版*
 
 ---
 
