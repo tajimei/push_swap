@@ -1,40 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   disorder.c                                         :+:      :+:    :+:   */
+/*   stack_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/19 19:14:57 by mtajima           #+#    #+#             */
-/*   Updated: 2026/05/19 19:14:58 by mtajima          ###   ########.fr       */
+/*   Created: 2026/05/19 19:13:14 by mtajima           #+#    #+#             */
+/*   Updated: 2026/05/19 19:13:42 by mtajima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-double	compute_disorder(t_stack *a)
+int	is_sorted(t_stack *stack)
 {
-	t_node	*ci;
-	t_node	*cj;
-	double	mistakes;
-	double	total_pairs;
+	t_node	*cur;
 
-	if (!a->top || !a->top->next)
-		return (0.0);
-	mistakes = 0.0;
-	total_pairs = 0.0;
-	ci = a->top;
-	while (ci)
+	if (!stack->top)
+		return (1);
+	cur = stack->top;
+	while (cur->next)
 	{
-		cj = ci->next;
-		while (cj)
-		{
-			total_pairs += 1.0;
-			if (ci->val > cj->val)
-				mistakes += 1.0;
-			cj = cj->next;
-		}
-		ci = ci->next;
+		if (cur->val > cur->next->val)
+			return (0);
+		cur = cur->next;
 	}
-	return (mistakes / total_pairs);
+	return (1);
+}
+
+int	find_rank(t_stack *stack, int val)
+{
+	t_node	*cur;
+	int		rank;
+
+	rank = 0;
+	cur = stack->top;
+	while (cur)
+	{
+		if (cur->val < val)
+			rank++;
+		cur = cur->next;
+	}
+	return (rank);
 }

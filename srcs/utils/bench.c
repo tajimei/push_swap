@@ -1,6 +1,16 @@
-#include "push_swap.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   bench.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/19 19:10:41 by mtajima           #+#    #+#             */
+/*   Updated: 2026/05/19 20:19:51 by mtajima          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-/* ========== 数値をstderrに出力するヘルパー ========== */
+#include "push_swap.h"
 
 static void	put_uint_fd(unsigned int n, int fd)
 {
@@ -56,20 +66,29 @@ static void	put_str_fd(const char *s, int fd)
 	write(fd, s, i);
 }
 
-/* ========== ベンチマーク出力本体 ========== */
-
-/*
-** --bench フラグがある場合にstderrへ出力
-** 操作列はstdoutに出力済みなので、ここはメトリクスのみ
-*/
-void	print_bench(t_state *state, const char *strategy, const char *complexity)
+static void	print_op_counts(int *ops)
 {
-	const char	*op_names[11] = {
-		"sa", "sb", "ss", "pa", "pb",
-		"ra", "rb", "rr", "rra", "rrb", "rrr"
-	};
+	const char	*op_names[11] = {"sa", "sb", "ss", "pa", "pb",
+		"ra", "rb", "rr", "rra", "rrb", "rrr"};
 	int			i;
 
+	write(2, "[bench] ", 8);
+	i = 0;
+	while (i < 11)
+	{
+		put_str_fd(op_names[i], 2);
+		write(2, ": ", 2);
+		put_uint_fd((unsigned int)ops[i], 2);
+		if (i < 10)
+			write(2, "  ", 2);
+		i++;
+	}
+	write(2, "\n", 1);
+}
+
+void	print_bench(t_state *state, const char *strategy,
+		const char *complexity)
+{
 	write(2, "[bench] disorder: ", 18);
 	put_double_2dec_fd(state->disorder * 100.0, 2);
 	write(2, "%\n", 2);
@@ -81,16 +100,5 @@ void	print_bench(t_state *state, const char *strategy, const char *complexity)
 	write(2, "[bench] total_ops: ", 19);
 	put_uint_fd((unsigned int)state->op_count, 2);
 	write(2, "\n", 1);
-	write(2, "[bench] ", 8);
-	i = 0;
-	while (i < 11)
-	{
-		put_str_fd(op_names[i], 2);
-		write(2, ": ", 2);
-		put_uint_fd((unsigned int)state->ops[i], 2);
-		if (i < 10)
-			write(2, "  ", 2);
-		i++;
-	}
-	write(2, "\n", 1);
+	print_op_counts(state->ops);
 }

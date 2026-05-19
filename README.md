@@ -200,10 +200,7 @@ Grading targets:
 
 ## Contributions
 
-| Login | Contributions |
-|-------|--------------|
-| mtajima | (describe your contributions here) |
-| yusakaki | (describe your contributions here) |
+mtajima, yusakaki
 
 ---
 
@@ -427,12 +424,9 @@ rank変換済みの値（0〜n-1）を √n 個のチャンクに分割します
 
 ---
 
-## 貢献者
+## Contributions
 
-| ログイン | 担当内容 |
-|----------|---------|
-| mtajima | （ここに担当内容を記載） |
-| yusakaki | （ここに担当内容を記載） |
+mtajima, yusakaki
 
 ---
 

@@ -1,6 +1,16 @@
-#include "push_swap.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   operations_ab.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/19 19:16:08 by mtajima           #+#    #+#             */
+/*   Updated: 2026/05/19 20:40:27 by mtajima          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-/* ========== 操作出力ヘルパー ========== */
+#include "push_swap.h"
 
 static void	print_op(t_state *state, const char *op, int len, int idx)
 {
@@ -9,8 +19,6 @@ static void	print_op(t_state *state, const char *op, int len, int idx)
 	state->op_count++;
 	state->ops[idx]++;
 }
-
-/* ========== ss: saとsbを同時に実行 ========== */
 
 void	ss(t_state *state)
 {
@@ -35,8 +43,6 @@ void	ss(t_state *state)
 	}
 	print_op(state, "ss", 2, OP_SS);
 }
-
-/* ========== rr: raとrbを同時に実行 ========== */
 
 void	rr(t_state *state)
 {
@@ -66,38 +72,28 @@ void	rr(t_state *state)
 	print_op(state, "rr", 2, OP_RR);
 }
 
-/* ========== rrr: rraとrrbを同時に実行 ========== */
-
-void	rrr(t_state *state)
+static void	reverse_rotate_stack(t_stack *stack)
 {
 	t_node	*cur;
 	t_node	*prev;
 
-	if (state->a->top && state->a->top->next)
+	if (!stack->top || !stack->top->next)
+		return ;
+	prev = NULL;
+	cur = stack->top;
+	while (cur->next)
 	{
-		prev = NULL;
-		cur = state->a->top;
-		while (cur->next)
-		{
-			prev = cur;
-			cur = cur->next;
-		}
-		prev->next = NULL;
-		cur->next = state->a->top;
-		state->a->top = cur;
+		prev = cur;
+		cur = cur->next;
 	}
-	if (state->b->top && state->b->top->next)
-	{
-		prev = NULL;
-		cur = state->b->top;
-		while (cur->next)
-		{
-			prev = cur;
-			cur = cur->next;
-		}
-		prev->next = NULL;
-		cur->next = state->b->top;
-		state->b->top = cur;
-	}
+	prev->next = NULL;
+	cur->next = stack->top;
+	stack->top = cur;
+}
+
+void	rrr(t_state *state)
+{
+	reverse_rotate_stack(state->a);
+	reverse_rotate_stack(state->b);
 	print_op(state, "rrr", 3, OP_RRR);
 }

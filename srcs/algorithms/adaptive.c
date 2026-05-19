@@ -1,14 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   adaptive.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/19 19:18:48 by mtajima           #+#    #+#             */
+/*   Updated: 2026/05/19 19:18:49 by mtajima          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
-/*
-** 適応型ソート：disorderの値に応じて戦略を切り替える
-**
-** disorder < 0.2  → O(n²)  simple
-** disorder < 0.5  → O(n√n) chunk
-** disorder >= 0.5 → O(n log n) radix
-**
-** disorder は init_state後、sort前に compute_disorder() で測定済み
-*/
 void	sort_adaptive(t_state *state)
 {
 	if (state->a->size <= 3)

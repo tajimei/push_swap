@@ -1,42 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sort_utils.c                                       :+:      :+:    :+:   */
+/*   str_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/19 19:36:21 by mtajima           #+#    #+#             */
-/*   Updated: 2026/05/19 19:36:31 by mtajima          ###   ########.fr       */
+/*   Created: 2026/05/19 20:10:51 by mtajima           #+#    #+#             */
+/*   Updated: 2026/05/19 20:14:33 by mtajima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void	rank_stack(t_stack *a)
+int	is_flag(const char *s)
 {
-	t_node	*cur;
-
-	cur = a->top;
-	while (cur)
-	{
-		cur->rank = find_rank(a, cur->val);
-		cur = cur->next;
-	}
+	return (s[0] == '-' && s[1] == '-');
 }
 
-int	get_position(t_stack *stack, int target_rank)
+int	str_eq(const char *a, const char *b)
 {
-	t_node	*cur;
-	int		pos;
+	int	i;
 
-	cur = stack->top;
-	pos = 0;
-	while (cur)
-	{
-		if (cur->rank == target_rank)
-			return (pos);
-		cur = cur->next;
-		pos++;
-	}
+	i = 0;
+	while (a[i] && b[i] && a[i] == b[i])
+		i++;
+	return (a[i] == '\0' && b[i] == '\0');
+}
+
+int	parse_strategy(const char *flag)
+{
+	if (str_eq(flag, "--adaptive"))
+		return (0);
+	if (str_eq(flag, "--simple"))
+		return (1);
+	if (str_eq(flag, "--medium"))
+		return (2);
+	if (str_eq(flag, "--complex"))
+		return (3);
 	return (-1);
 }

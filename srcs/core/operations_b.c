@@ -1,6 +1,16 @@
-#include "push_swap.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   operations_b.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/19 19:15:04 by mtajima           #+#    #+#             */
+/*   Updated: 2026/05/19 20:39:27 by mtajima          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-/* ========== 操作出力ヘルパー ========== */
+#include "push_swap.h"
 
 static void	print_op(t_state *state, const char *op, int len, int idx)
 {
@@ -9,8 +19,6 @@ static void	print_op(t_state *state, const char *op, int len, int idx)
 	state->op_count++;
 	state->ops[idx]++;
 }
-
-/* ========== sb: スタックb先頭2要素を交換 ========== */
 
 void	sb(t_state *state)
 {
@@ -27,8 +35,6 @@ void	sb(t_state *state)
 	print_op(state, "sb", 2, OP_SB);
 }
 
-/* ========== pb: aの先頭をbの先頭へ ========== */
-
 void	pb(t_state *state)
 {
 	t_node	*node;
@@ -39,8 +45,6 @@ void	pb(t_state *state)
 	push_node(state->b, node);
 	print_op(state, "pb", 2, OP_PB);
 }
-
-/* ========== rb: スタックbを上方向に1回転 ========== */
 
 void	rb(t_state *state)
 {
@@ -58,8 +62,6 @@ void	rb(t_state *state)
 	last->next = first;
 	print_op(state, "rb", 2, OP_RB);
 }
-
-/* ========== rrb: スタックbを下方向に1回転 ========== */
 
 void	rrb(t_state *state)
 {

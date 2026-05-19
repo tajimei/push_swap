@@ -1,8 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   chunk.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/19 19:32:33 by mtajima           #+#    #+#             */
+/*   Updated: 2026/05/19 19:49:03 by mtajima          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
-/* ========== √n の計算（整数） ========== */
-
-static int	isqrt(int n)
+int	isqrt(int n)
 {
 	int	s;
 
@@ -12,13 +22,7 @@ static int	isqrt(int n)
 	return (s);
 }
 
-/* ========== aの先頭からchunk_sizeで何番目のチャンクか ========== */
-
-/*
-** rank が [chunk_idx * chunk_size, (chunk_idx+1) * chunk_size) に入るか
-** chunk_idx: 0-indexed
-*/
-static int	in_chunk(t_node *node, int chunk_idx, int chunk_size)
+int	in_chunk(t_node *node, int chunk_idx, int chunk_size)
 {
 	int	lo;
 	int	hi;
@@ -28,16 +32,7 @@ static int	in_chunk(t_node *node, int chunk_idx, int chunk_size)
 	return (node->rank >= lo && node->rank < hi);
 }
 
-/* ========== チャンクをbに移す ========== */
-
-/*
-** aをぐるぐる回しながら現在のチャンクに属する要素をpb
-** chunkの要素を全部bに送るまでループ
-** bにpushする際、rankが大きいものは先頭（ra済み）に来るよう工夫:
-**   rank が chunk中央より上 → そのままpb（bの先頭へ）
-**   rank が chunk中央より下 → pbしてrbでbの底へ
-*/
-static void	push_chunk_to_b(t_state *state, int chunk_idx,
+void	push_chunk_to_b(t_state *state, int chunk_idx,
 	int chunk_size, int chunk_count)
 {
 	int	pushed;
@@ -61,12 +56,7 @@ static void	push_chunk_to_b(t_state *state, int chunk_idx,
 	}
 }
 
-/* ========== bから最大rankをaへ戻す ========== */
-
-/*
-** bの中から最大rankのノードを探し、最小コストで先頭に持ってきてpa
-*/
-static int	max_rank_pos_b(t_stack *b)
+int	max_rank_pos_b(t_stack *b)
 {
 	t_node	*cur;
 	int		max_rank;
@@ -90,7 +80,7 @@ static int	max_rank_pos_b(t_stack *b)
 	return (max_pos);
 }
 
-static void	rotate_to_top_b(t_state *state, int pos)
+void	rotate_to_top_b(t_state *state, int pos)
 {
 	int	size;
 	int	i;
@@ -114,50 +104,4 @@ static void	rotate_to_top_b(t_state *state, int pos)
 			i++;
 		}
 	}
-}
-
-static void	push_all_b_to_a(t_state *state)
-{
-	int	pos;
-
-	while (state->b->size > 0)
-	{
-		pos = max_rank_pos_b(state->b);
-		rotate_to_top_b(state, pos);
-		pa(state);
-	}
-}
-
-/* ========== chunk sort 本体 ========== */
-
-void	sort_chunk(t_state *state)
-{
-	int	n;
-	int	chunk_size;
-	int	num_chunks;
-	int	lo;
-	int	hi;
-	int	count;
-	int	i;
-
-	if (state->a->size <= 3)
-	{
-		sort_simple(state);
-		return ;
-	}
-	n = state->a->size;
-	chunk_size = isqrt(n);
-	num_chunks = (n + chunk_size - 1) / chunk_size;
-	i = 0;
-	while (i < num_chunks)
-	{
-		lo = i * chunk_size;
-		hi = lo + chunk_size;
-		if (hi > n)
-			hi = n;
-		count = hi - lo;
-		push_chunk_to_b(state, i, chunk_size, count);
-		i++;
-	}
-	push_all_b_to_a(state);
 }

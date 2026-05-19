@@ -1,6 +1,16 @@
-#include "push_swap.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   operations_a.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/19 19:16:58 by mtajima           #+#    #+#             */
+/*   Updated: 2026/05/19 20:37:26 by mtajima          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-/* ========== 操作出力ヘルパー ========== */
+#include "push_swap.h"
 
 static void	print_op(t_state *state, const char *op, int len, int idx)
 {
@@ -9,14 +19,12 @@ static void	print_op(t_state *state, const char *op, int len, int idx)
 	state->op_count++;
 	state->ops[idx]++;
 }
- 
-/* ========== sa: スタックa先頭2要素を交換 ========== */
- 
+
 void	sa(t_state *state)
 {
 	t_node	*first;
 	t_node	*second;
- 
+
 	if (!state->a->top || !state->a->top->next)
 		return ;
 	first = state->a->top;
@@ -26,27 +34,23 @@ void	sa(t_state *state)
 	state->a->top = second;
 	print_op(state, "sa", 2, OP_SA);
 }
- 
-/* ========== pa: bの先頭をaの先頭へ ========== */
- 
+
 void	pa(t_state *state)
 {
 	t_node	*node;
- 
+
 	if (!state->b->top)
 		return ;
 	node = pop_node(state->b);
 	push_node(state->a, node);
 	print_op(state, "pa", 2, OP_PA);
 }
- 
-/* ========== ra: スタックaを上方向に1回転 ========== */
- 
+
 void	ra(t_state *state)
 {
 	t_node	*first;
 	t_node	*last;
- 
+
 	if (!state->a->top || !state->a->top->next)
 		return ;
 	first = state->a->top;
@@ -58,14 +62,12 @@ void	ra(t_state *state)
 	last->next = first;
 	print_op(state, "ra", 2, OP_RA);
 }
- 
-/* ========== rra: スタックaを下方向に1回転 ========== */
- 
+
 void	rra(t_state *state)
 {
 	t_node	*cur;
 	t_node	*prev;
- 
+
 	if (!state->a->top || !state->a->top->next)
 		return ;
 	prev = NULL;

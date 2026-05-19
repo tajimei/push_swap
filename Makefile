@@ -5,9 +5,8 @@ CC		= cc
 CFLAGS	= -Wall -Wextra -Werror
 INCLUDES	= -I includes/
 
-# ========== ソースファイル ==========
-
 CORE_SRCS	= srcs/core/stack_init.c \
+			  srcs/core/stack_init2.c \
 			  srcs/core/operations_a.c \
 			  srcs/core/operations_b.c \
 			  srcs/core/operations_ab.c \
@@ -15,11 +14,15 @@ CORE_SRCS	= srcs/core/stack_init.c \
 
 UTILS_SRCS	= srcs/utils/error.c \
 			  srcs/utils/stack_utils.c \
+			  srcs/utils/stack_utils2.c \
+			  srcs/utils/str_utils.c \
 			  srcs/utils/sort_utils.c \
 			  srcs/utils/bench.c
 
 ALGO_SRCS	= srcs/algorithms/simple.c \
+			  srcs/algorithms/simple2.c \
 			  srcs/algorithms/chunk.c \
+			  srcs/algorithms/chunk2.c \
 			  srcs/algorithms/radix.c \
 			  srcs/algorithms/adaptive.c
 
@@ -30,20 +33,13 @@ BONUS_SRCS	= srcs/bonus/checker_main.c \
 
 SRCS		= $(CORE_SRCS) $(UTILS_SRCS) $(ALGO_SRCS) $(MAIN_SRC)
 
-# ========== オブジェクトファイル ==========
-
 OBJS		= $(SRCS:.c=.o)
 BONUS_OBJS	= $(CORE_SRCS:.c=.o) $(UTILS_SRCS:.c=.o) $(BONUS_SRCS:.c=.o)
-
-# ========== ルール ==========
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
-
-bonus: $(BONUS_OBJS)
-	$(CC) $(CFLAGS) $(BONUS_OBJS) -o $(BONUS_NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@

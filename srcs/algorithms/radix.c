@@ -1,6 +1,16 @@
-#include "push_swap.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   radix.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/19 19:35:08 by mtajima           #+#    #+#             */
+/*   Updated: 2026/05/19 20:45:22 by mtajima          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-/* ========== ビット数の計算 ========== */
+#include "push_swap.h"
 
 static int	bit_count(int n)
 {
@@ -19,35 +29,26 @@ static int	bit_count(int n)
 	return (bits);
 }
 
-/* ========== radix sort 本体 ========== */
+static void	push_and_rotate(t_state *state, int n, int bit)
+{
+	int	i;
 
-/*
-** LSDラディックスソート
-**
-** スタック操作でLSDを実現する正しい方法:
-**   bit=0のパス: aを全部見て
-**     ビット0が0 → pbでbへ（bの先頭に積まれる）
-**     ビット0が1 → raでaの末尾へ
-**   パス終了後: bを全pa（bの先頭から取るので逆順でaに入る）
-**
-** paで戻すと逆順になる問題を解決するため、
-** 「0をpb、1をra」ではなく「1をpb、0をra」に入れ替えて
-** 逆順の反転を利用してソート方向を正しく保つ。
-**
-** つまり:
-**   ビットが1 → pbでbへ
-**   ビットが0 → raでaの末尾へ
-** paで戻すとbの積み順が逆になり、結果的に
-** 「小さいrank（bit=0）がaの下部、大きいrank（bit=1）が上部」
-** という正しい並びになる。
-*/
+	i = 0;
+	while (i < n)
+	{
+		if ((state->a->top->rank >> bit) & 1)
+			ra(state);
+		else
+			pb(state);
+		i++;
+	}
+}
+
 void	sort_radix(t_state *state)
 {
 	int	n;
 	int	bits;
 	int	bit;
-	int	i;
-	int	b_size;
 
 	if (state->a->size <= 3)
 	{
@@ -59,22 +60,9 @@ void	sort_radix(t_state *state)
 	bit = 0;
 	while (bit < bits)
 	{
-		i = 0;
-		while (i < n)
-		{
-			if ((state->a->top->rank >> bit) & 1)
-				ra(state);
-			else
-				pb(state);
-			i++;
-		}
-		b_size = state->b->size;
-		i = 0;
-		while (i < b_size)
-		{
+		push_and_rotate(state, n, bit);
+		while (state->b->size > 0)
 			pa(state);
-			i++;
-		}
 		bit++;
 	}
 }
