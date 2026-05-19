@@ -6,7 +6,7 @@
 /*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:22:06 by mtajima           #+#    #+#             */
-/*   Updated: 2026/05/19 20:23:01 by mtajima          ###   ########.fr       */
+/*   Updated: 2026/05/19 21:28:12 by mtajima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,6 @@ void				push_chunk_to_b(t_state *state, int chunk_idx,
 						int chunk_size, int chunk_count);
 int					max_rank_pos_b(t_stack *b);
 void				rotate_to_top_b(t_state *state, int pos);
-void				sort_chunk(t_state *state);
 void				sort_chunk(t_state *state);
 
 /* ========== algorithms/radix.c ========== */
