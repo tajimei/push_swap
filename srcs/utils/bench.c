@@ -6,7 +6,7 @@
 /*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:10:41 by mtajima           #+#    #+#             */
-/*   Updated: 2026/05/19 20:19:51 by mtajima          ###   ########.fr       */
+/*   Updated: 2026/05/21 13:43:33 by mtajima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,23 +79,22 @@ static void	print_op_counts(int *ops)
 		put_str_fd(op_names[i], 2);
 		write(2, ": ", 2);
 		put_uint_fd((unsigned int)ops[i], 2);
-		if (i < 10)
+		if (i == 4)
+			write(2, "\n[bench] ", 9);
+		else if (i < 10)
 			write(2, "  ", 2);
 		i++;
 	}
-	write(2, "\n", 1);
+	write (2, "\n", 1);
 }
 
-void	print_bench(t_state *state, const char *strategy,
-		const char *complexity)
+void	print_bench(t_state *state, const char *strategy)
 {
 	write(2, "[bench] disorder: ", 18);
 	put_double_2dec_fd(state->disorder * 100.0, 2);
 	write(2, "%\n", 2);
 	write(2, "[bench] strategy: ", 18);
 	put_str_fd(strategy, 2);
-	write(2, " / ", 3);
-	put_str_fd(complexity, 2);
 	write(2, "\n", 1);
 	write(2, "[bench] total_ops: ", 19);
 	put_uint_fd((unsigned int)state->op_count, 2);

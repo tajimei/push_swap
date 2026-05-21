@@ -6,7 +6,7 @@
 /*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:35:33 by mtajima           #+#    #+#             */
-/*   Updated: 2026/05/19 19:42:28 by mtajima          ###   ########.fr       */
+/*   Updated: 2026/05/21 14:26:10 by mtajima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,14 +85,14 @@ void	sort_three(t_state *state)
 		rra(state);
 	}
 	else if (a > b && b < c && a > c)
-		ra(state);
+		rra(state);
 	else if (a < b && b > c && a < c)
 	{
 		sa(state);
 		ra(state);
 	}
 	else if (a < b && b > c && a > c)
-		rra(state);
+		ra(state);
 }
 
 void	sort_two(t_state *state)

@@ -6,7 +6,7 @@
 /*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:36:43 by mtajima           #+#    #+#             */
-/*   Updated: 2026/05/19 20:17:32 by mtajima          ###   ########.fr       */
+/*   Updated: 2026/05/21 19:08:36 by mtajima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,34 @@
 
 static void	run_sort(t_state *state, int strategy)
 {
-	const char	*names[4] = {"Adaptive", "Simple", "Chunk", "Radix"};
-	const char	*complexities[4] = {
-		"O(n log n) / O(n sqrt n) / O(n^2)",
-		"O(n^2)",
-		"O(n sqrt n)",
-		"O(n log n)"
+	const char	*names[4] = {
+		"Adaptive / default", "Simple / O(n^2)", "Chunk / O(n√n)",
+		"Radix / O(n log n)"
 	};
 
 	if (is_sorted(state->a))
 		return ;
 	state->disorder = compute_disorder(state->a);
-	rank_stack(state->a);
+	state->strategy_name = names[strategy];
 	if (strategy == 0)
 		sort_adaptive(state);
 	else if (strategy == 1)
 		sort_simple(state);
 	else if (strategy == 2)
+	{
+		rank_stack(state->a);
 		sort_chunk(state);
+	}
 	else
+	{
+		rank_stack(state->a);
 		sort_radix(state);
+	}
 	if (state->bench_mode)
-		print_bench(state, names[strategy], complexities[strategy]);
+		print_bench(state, state->strategy_name);
 }
 
-static int	parse_flags(int argc, char **argv,
-				int *strategy, int *bench_mode)
+static int	parse_flags(int argc, char **argv, int *strategy, int *bench_mode)
 {
 	int	i;
 

@@ -6,7 +6,7 @@
 /*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:46:32 by mtajima           #+#    #+#             */
-/*   Updated: 2026/05/19 20:47:52 by mtajima          ###   ########.fr       */
+/*   Updated: 2026/05/21 19:20:24 by mtajima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	sort_chunk(t_state *state)
 	int	num_chunks;
 	int	i;
 
-	if (state->a->size <= 3)
+	if (state->a->size <= 5)
 	{
 		sort_simple(state);
 		return ;

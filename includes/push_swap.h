@@ -6,7 +6,7 @@
 /*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:22:06 by mtajima           #+#    #+#             */
-/*   Updated: 2026/05/19 21:28:12 by mtajima          ###   ########.fr       */
+/*   Updated: 2026/05/21 13:41:51 by mtajima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_state
 	int				ops[11];
 	double			disorder;
 	int				bench_mode;
+	const char		*strategy_name;
 }					t_state;
 
 # define OP_SA 0
@@ -125,7 +126,6 @@ void				sort_radix(t_state *state);
 void				sort_adaptive(t_state *state);
 
 /* ========== bench.c ========== */
-void				print_bench(t_state *state, const char *strategy,
-						const char *complexity);
+void				print_bench(t_state *state, const char *strategy);
 
 #endif
