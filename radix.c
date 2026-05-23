@@ -6,7 +6,7 @@
 /*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:35:08 by mtajima           #+#    #+#             */
-/*   Updated: 2026/05/19 20:45:22 by mtajima          ###   ########.fr       */
+/*   Updated: 2026/05/23 17:22:51 by mtajima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,11 @@
 static int	bit_count(int n)
 {
 	int	bits;
-	int	m;
 
 	bits = 0;
-	m = n - 1;
-	while (m > 0)
+	while (n > 0)
 	{
-		m >>= 1;
+		n >>= 1;
 		bits++;
 	}
 	if (bits == 0)
@@ -50,13 +48,13 @@ void	sort_radix(t_state *state)
 	int	bits;
 	int	bit;
 
-	if (state->a->size <= 3)
+	if (state->a->size <= 5)
 	{
 		sort_simple(state);
 		return ;
 	}
 	n = state->a->size;
-	bits = bit_count(n);
+	bits = bit_count(n - 1);
 	bit = 0;
 	while (bit < bits)
 	{

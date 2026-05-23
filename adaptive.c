@@ -6,7 +6,7 @@
 /*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:18:48 by mtajima           #+#    #+#             */
-/*   Updated: 2026/05/23 14:47:51 by mtajima          ###   ########.fr       */
+/*   Updated: 2026/05/23 17:23:12 by mtajima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	sort_adaptive(t_state *state)
 {
-	if (state->a->size <= 5 || state->disorder < 0.2)
+	if (state->disorder < 0.2)
 	{
 		state->strategy_name = "Adaptive / O(n^2)";
 		sort_simple(state);

@@ -164,10 +164,10 @@ The number of passes equals the number of bits needed to represent n-1, which is
 | ≥ 0.5 | Radix sort | O(n log n) |
 
 **Rationale for thresholds:**
-- Below 0.2, the input is nearly sorted. Selection sort is fast on nearly-sorted data because the minimum is usually already near the top, keeping rotation costs low.Additionally, “simple” is applied when size <= 5. (This ensures that the number of steps is 8 or fewer when the number of elements is 5 or fewer.)
+- Below 0.2, the input is nearly sorted. Selection sort is fast on nearly-sorted data because the minimum is usually already near the top, keeping rotation costs low.
 - Between 0.2 and 0.5, chunk sort provides an excellent balance between simplicity and performance; the partial ordering allows chunks to be pushed efficiently.
 - Above 0.5, the input is too disordered for chunk or selection sort to be competitive. Radix sort's consistent O(n log n) cost makes it the reliable choice.
-
+- *Note: When size ≤ 5, the “simple” sort is applied; however, since this is handled within each sort, the --bench output shows values such as nlogn or n√n.
 This is the default behavior when no strategy flag is given.
 
 ---
@@ -273,19 +273,49 @@ ARG="4 67 3 87 23"; ./push_swap $ARG | wc -l
 shuf -i 0-9999 -n 500 > args.txt
 ./push_swap $(cat args.txt) | wc -l
 ```
+---
 
-### エラー処理
+## データ構造
+
+プログラム全体で3つの構造体を使います。
+
+### t_node — スタックの1要素
 
 ```bash
-# 整数でない引数 → stderrに "Error" を出力
-./push_swap 1 two 3
-
-# 重複した値 → stderrに "Error" を出力
-./push_swap 3 2 3
-
-# int範囲外の値 → stderrに "Error" を出力
-./push_swap 2147483648
+typedef struct s_node
+{
+    int             val;   // 元の値
+    int             rank;  // 順位（0-indexed、rank変換後）
+    struct s_node   *next; // 次のノードへのポインタ
+}   t_node;
 ```
+---
+
+### t_stack — スタック本体
+
+```bash
+typedef struct s_stack
+{
+    t_node  *top;  // 先頭ノードへのポインタ（操作される側）
+    int     size;  // 現在の要素数
+}   t_stack;
+```
+---
+
+### t_state — プログラム全体の状態
+
+```bash
+typedef struct s_state
+{
+    t_stack *a;          // スタックa
+    t_stack *b;          // スタックb
+    int     op_count;    // 総操作数カウント
+    int     ops[11];     // 各操作のカウント [sa,sb,ss,pa,pb,ra,rb,rr,rra,rrb,rrr]
+    double  disorder;    // 無秩序度（0.0〜1.0）
+    int     bench_mode;  // --benchフラグ
+}   t_state;
+```
+- 設計のポイント : t_stateをポインタで全関数に渡すことで、グローバル変数なしに操作カウントやフラグを全関数で共有できます。
 
 ---
 
@@ -293,6 +323,7 @@ shuf -i 0-9999 -n 500 > args.txt
 
 このプログラムは4つのソート戦略を実装しています。戦略はフラグで明示指定するか、adaptiveアルゴリズムが入力のdisorderスコアを測定して自動選択します。
 
+---
 ### disorderスコアメトリクス
 
 ソート前に、入力がどの程度乱れているかを示す **disorderスコア**（0.0〜1.0）を計算します。スコアが `0` の場合はすでにソート済み、`1` の場合は最悪の順序を意味します。計算式は以下の通りです：
@@ -302,7 +333,34 @@ disorder = (i < j かつ a[i] > a[j] となるペアの数) / 全ペア数
 ```
 
 ---
+### rank変換
 
+ChunkとRadixはrank変換が前提です。rank変換とは、元の値を「何番目に小さいか」という0-indexedの順位に置き換えることです。
+
+```
+元の値:  [50, 10, 30, 20, 40]
+         ↓ rank_stack() を実行
+rank値:  [ 4,  0,  2,  1,  3]
+         // 10が最小なのでrank=0、50が最大なのでrank=4
+```
+- [なぜrank変換が必要か]
+元の値は-2147483648〜2147483647と広い範囲を取り得る。rank変換後は必ず0〜n-1の連続した整数になるため、radixのビット数計算が正確になり、chunkのチャンク分割も均等になる。
+
+- [find_rankの仕組み]
+対象の値よりも小さい値が何個あるかを数えることでrankを求める。O(n²)だが前処理として1回だけ実行するので問題なし。
+
+---
+
+### エラー処理
+
+| エラーケース | 出力 |
+|----------|---------|
+| 整数でない引数（例: "abc"）|stderrに Error を出力してexit(1)|
+| int範囲外の値 | stderrに Error を出力してexit(1) |
+| 重複した値 | stderrに Error を出力してexit(1) |
+| 引数なし | 何も出力せず終了（正常）|
+
+---
 ### 1. Simple — O(n²) · `--simple`
 
 **アルゴリズム：** 選択ソートの適応版
@@ -364,9 +422,10 @@ rank変換済みの値（0〜n-1）を √n 個のチャンクに分割します
 | ≥ 0.5 | Radix ソート | O(n log n) |
 
 **根拠：**
-- 0.2未満：入力がほぼソート済みのため、最小値は先頭付近にあることが多く、選択ソートの回転コストが小さく抑えられる。また、size <= 5のときもsimpleが適用される。(要素数が５以下のときに手順が８以下になるように)
+- 0.2未満：入力がほぼソート済みのため、最小値は先頭付近にあることが多く、選択ソートの回転コストが小さく抑えられる
 - 0.2〜0.5：ある程度の秩序が残っているため、チャンク単位でまとめてbへ送る戦略が効率的に機能する。
 - 0.5以上：入力が十分に乱れており、チャンクや選択ソートでは競争力がなくなる。基数ソートのO(n log n)の安定したコストが最も信頼できる。
+- ※size <= 5のときはsimpleが適用されるが、それぞれのソートの中で処理しているため--benchの表示では(nlognやｎ√nとなる)
 
 フラグを指定しない場合のデフォルト動作です。
 
