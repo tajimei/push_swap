@@ -5,36 +5,32 @@ CC		= cc
 CFLAGS	= -Wall -Wextra -Werror
 INCLUDES	= -I includes/
 
-CORE_SRCS	= srcs/core/stack_init.c \
-			  srcs/core/stack_init2.c \
-			  srcs/core/operations_a.c \
-			  srcs/core/operations_b.c \
-			  srcs/core/operations_ab.c \
-			  srcs/core/disorder.c
+CORE_SRCS	= stack_init.c \
+			  stack_init2.c \
+			  operations_a.c \
+			  operations_b.c \
+			  operations_ab.c \
+			  disorder.c
 
-UTILS_SRCS	= srcs/utils/error.c \
-			  srcs/utils/stack_utils.c \
-			  srcs/utils/stack_utils2.c \
-			  srcs/utils/str_utils.c \
-			  srcs/utils/sort_utils.c \
-			  srcs/utils/bench.c
+UTILS_SRCS	= error.c \
+			  stack_utils.c \
+			  stack_utils2.c \
+			  str_utils.c \
+			  sort_utils.c \
+			  bench.c
 
-ALGO_SRCS	= srcs/algorithms/simple.c \
-			  srcs/algorithms/simple2.c \
-			  srcs/algorithms/chunk.c \
-			  srcs/algorithms/chunk2.c \
-			  srcs/algorithms/radix.c \
-			  srcs/algorithms/adaptive.c
+ALGO_SRCS	= simple.c \
+			  simple2.c \
+			  chunk.c \
+			  chunk2.c \
+			  radix.c \
+			  adaptive.c
 
-MAIN_SRC	= srcs/main.c
-
-BONUS_SRCS	= srcs/bonus/checker_main.c \
-			  srcs/bonus/checker_ops.c
+MAIN_SRC	= main.c
 
 SRCS		= $(CORE_SRCS) $(UTILS_SRCS) $(ALGO_SRCS) $(MAIN_SRC)
 
 OBJS		= $(SRCS:.c=.o)
-BONUS_OBJS	= $(CORE_SRCS:.c=.o) $(UTILS_SRCS:.c=.o) $(BONUS_SRCS:.c=.o)
 
 all: $(NAME)
 
