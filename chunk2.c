@@ -6,7 +6,7 @@
 /*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:46:32 by mtajima           #+#    #+#             */
-/*   Updated: 2026/05/21 19:20:24 by mtajima          ###   ########.fr       */
+/*   Updated: 2026/05/23 16:02:20 by mtajima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void	process_chunk(t_state *state, int i, int chunk_size, int n)
 	hi = lo + chunk_size;
 	if (hi > n)
 		hi = n;
-	push_chunk_to_b(state, i, chunk_size, hi - lo);
+	push_chunk_to_b(state, hi, lo);
 }
 
 void	sort_chunk(t_state *state)

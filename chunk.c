@@ -6,7 +6,7 @@
 /*   By: mtajima <mtajima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:32:33 by mtajima           #+#    #+#             */
-/*   Updated: 2026/05/21 14:25:13 by mtajima          ###   ########.fr       */
+/*   Updated: 2026/05/23 16:03:05 by mtajima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,29 +22,18 @@ int	isqrt(int n)
 	return (s);
 }
 
-int	in_chunk(t_node *node, int chunk_idx, int chunk_size)
-{
-	int	lo;
-	int	hi;
-
-	lo = chunk_idx * chunk_size;
-	hi = lo + chunk_size;
-	return (node->rank >= lo && node->rank < hi);
-}
-
-void	push_chunk_to_b(t_state *state, int chunk_idx,
-	int chunk_size, int chunk_count)
+void	push_chunk_to_b(t_state *state, int hi, int lo)
 {
 	int	pushed;
 	int	total;
 	int	mid;
 
-	total = chunk_count;
+	total = hi - lo;
 	pushed = 0;
-	mid = chunk_idx * chunk_size + chunk_size / 2;
+	mid = lo + ((hi - lo) / 2);
 	while (pushed < total)
 	{
-		if (in_chunk(state->a->top, chunk_idx, chunk_size))
+		if (state->a->top->rank >= lo && state->a->top->rank < hi)
 		{
 			pb(state);
 			if (state->b->top->rank < mid)

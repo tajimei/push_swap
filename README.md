@@ -113,7 +113,7 @@ All elements except the top 3 are moved to stack b by repeatedly finding the cur
 - Time: O(n²) — for each of n elements, finding the minimum scans up to n nodes, and rotating costs up to n/2 operations.
 - Space: O(n) — uses stack b to hold elements during sorting.
 
-**When to use:** Best for very small inputs (≤ ~10 elements) or nearly-sorted inputs where disorder < 0.2.
+**When to use:** Best for very small inputs (≤ 5 elements) or nearly-sorted inputs where disorder < 0.2.
 
 ---
 
@@ -130,10 +130,6 @@ Once all elements are in b, the algorithm repeatedly finds the element with the 
 - Space: O(n) — all elements are temporarily held in stack b.
 
 **When to use:** Disorder between 0.2 and 0.5. Good balance between implementation complexity and performance.
-
-**Performance targets:**
-- 100 elements: ~700–900 operations
-- 500 elements: ~6000–8000 operations
 
 ---
 
@@ -155,10 +151,6 @@ The number of passes equals the number of bits needed to represent n-1, which is
 
 **When to use:** High disorder (≥ 0.5) or large inputs. Most consistent operation count regardless of input order.
 
-**Performance targets:**
-- 100 elements: ~900–1200 operations
-- 500 elements: ~6000–7000 operations
-
 ---
 
 ### 4. Adaptive — O(n²) / O(n√n) / O(n log n) · `--adaptive` (default)
@@ -172,29 +164,11 @@ The number of passes equals the number of bits needed to represent n-1, which is
 | ≥ 0.5 | Radix sort | O(n log n) |
 
 **Rationale for thresholds:**
-- Below 0.2, the input is nearly sorted. Selection sort is fast on nearly-sorted data because the minimum is usually already near the top, keeping rotation costs low.
+- Below 0.2, the input is nearly sorted. Selection sort is fast on nearly-sorted data because the minimum is usually already near the top, keeping rotation costs low.Additionally, “simple” is applied when size <= 5. (This ensures that the number of steps is 8 or fewer when the number of elements is 5 or fewer.)
 - Between 0.2 and 0.5, chunk sort provides an excellent balance between simplicity and performance; the partial ordering allows chunks to be pushed efficiently.
 - Above 0.5, the input is too disordered for chunk or selection sort to be competitive. Radix sort's consistent O(n log n) cost makes it the reliable choice.
 
 This is the default behavior when no strategy flag is given.
-
----
-
-## Performance Benchmark
-
-Measured over random inputs. Results may vary slightly per run.
-
-| Elements | Simple | Chunk | Radix | Adaptive |
-|----------|--------|-------|-------|----------|
-| 100 | ~1400 | ~750 ✅ | ~1080 ✅ | ~750–1080 ✅ |
-| 500 | ~31000 | ~7300 ✅ | ~6800 ✅ | ~6800–7300 ✅ |
-
-Grading targets:
-
-| Elements | Pass | Good | Excellent |
-|----------|------|------|-----------|
-| 100 | < 2000 | < 1500 | < 700 |
-| 500 | < 12000 | < 8000 | < 5500 |
 
 ---
 
@@ -218,7 +192,7 @@ mtajima, yusakaki
 
 AI (Claude) was used during this project for the following tasks:
 
-- **Algorithm design discussion** — comparing the trade-offs between radix sort, chunk sort, and Turkish sort for this specific problem model.
+- **Algorithm design discussion/understanding** — We conducted a comparative analysis of radix sort, chunk sort, and Turkish sort, and discussed our understanding of the algorithms in a brainstorming session.
 - **Understanding the assignment** — translating and interpreting the subject requirements.
 - **README drafting** — assisting with translation and documentation writing.
 
@@ -236,7 +210,7 @@ All generated code and explanations were reviewed, tested, and understood by bot
 
 ## 概要
 
-**push_swap** は、スタック `a` と `b` の2つ、および11種類の操作を使って整数のリストをソートします。入力の無秩序度に基づいて最も効率的なソート戦略を自動選択し、操作回数の最小化を目指します。
+**push_swap** は、スタック `a` と `b` の2つ、および11種類の操作を使って整数のリストをソートします。入力のdisorderスコアに基づいて最も効率的なソート戦略を自動選択し、操作回数の最小化を目指します。
 
 使用できる操作は以下の通りです：
 
@@ -317,11 +291,11 @@ shuf -i 0-9999 -n 500 > args.txt
 
 ## アルゴリズム
 
-このプログラムは4つのソート戦略を実装しています。戦略はフラグで明示指定するか、adaptiveアルゴリズムが入力の無秩序度を測定して自動選択します。
+このプログラムは4つのソート戦略を実装しています。戦略はフラグで明示指定するか、adaptiveアルゴリズムが入力のdisorderスコアを測定して自動選択します。
 
-### 無秩序度メトリクス
+### disorderスコアメトリクス
 
-ソート前に、入力がどの程度乱れているかを示す **無秩序度スコア**（0.0〜1.0）を計算します。スコアが `0` の場合はすでにソート済み、`1` の場合は最悪の順序を意味します。計算式は以下の通りです：
+ソート前に、入力がどの程度乱れているかを示す **disorderスコア**（0.0〜1.0）を計算します。スコアが `0` の場合はすでにソート済み、`1` の場合は最悪の順序を意味します。計算式は以下の通りです：
 
 ```
 disorder = (i < j かつ a[i] > a[j] となるペアの数) / 全ペア数
@@ -339,7 +313,7 @@ disorder = (i < j かつ a[i] > a[j] となるペアの数) / 全ペア数
 - 時間：O(n²) — n要素それぞれについて最小値探索（最大n回）と回転（最大n/2回）が必要
 - 空間：O(n) — ソート中にスタックbを一時バッファとして使用
 
-**適した場面：** 非常に小さい入力（10要素以下程度）や、disorderが0.2未満のほぼソート済みの入力
+**適した場面：** 非常に小さい入力（5要素以下程度）や、disorderが0.2未満のほぼソート済みの入力
 
 ---
 
@@ -356,10 +330,6 @@ rank変換済みの値（0〜n-1）を √n 個のチャンクに分割します
 - 空間：O(n) — 全要素を一時的にスタックbに保持
 
 **適した場面：** disorder が 0.2〜0.5 の範囲。実装の簡潔さとパフォーマンスの良いバランス。
-
-**パフォーマンス目安：**
-- 100要素：約700〜900操作
-- 500要素：約6000〜8000操作
 
 ---
 
@@ -381,46 +351,24 @@ rank変換済みの値（0〜n-1）を √n 個のチャンクに分割します
 
 **適した場面：** disorder が 0.5以上、または大きな入力。入力の順序に関わらず操作数が安定している。
 
-**パフォーマンス目安：**
-- 100要素：約900〜1200操作
-- 500要素：約6000〜7000操作
-
 ---
 
 ### 4. Adaptive — O(n²) / O(n√n) / O(n log n) · `--adaptive`（デフォルト）
 
-**アルゴリズム：** 無秩序度スコアに基づいて戦略を自動選択
+**アルゴリズム：** disorderスコアに基づいて戦略を自動選択
 
-| 無秩序度 | 使用戦略 | 計算量 |
+| disorderスコア | 使用戦略 | 計算量 |
 |----------|---------|--------|
 | < 0.2 | Simple（選択ソート） | O(n²) |
 | 0.2 ≤ d < 0.5 | Chunk ソート | O(n√n) |
 | ≥ 0.5 | Radix ソート | O(n log n) |
 
-**閾値の根拠：**
-- 0.2未満：入力がほぼソート済みのため、最小値は先頭付近にあることが多く、選択ソートの回転コストが小さく抑えられる。
+**根拠：**
+- 0.2未満：入力がほぼソート済みのため、最小値は先頭付近にあることが多く、選択ソートの回転コストが小さく抑えられる。また、size <= 5のときもsimpleが適用される。(要素数が５以下のときに手順が８以下になるように)
 - 0.2〜0.5：ある程度の秩序が残っているため、チャンク単位でまとめてbへ送る戦略が効率的に機能する。
 - 0.5以上：入力が十分に乱れており、チャンクや選択ソートでは競争力がなくなる。基数ソートのO(n log n)の安定したコストが最も信頼できる。
 
 フラグを指定しない場合のデフォルト動作です。
-
----
-
-## パフォーマンスベンチマーク
-
-ランダム入力での実測値（実行ごとに多少変動します）：
-
-| 要素数 | Simple | Chunk | Radix | Adaptive |
-|--------|--------|-------|-------|----------|
-| 100 | ~1400 | ~750 ✅ | ~1080 ✅ | ~750〜1080 ✅ |
-| 500 | ~31000 | ~7300 ✅ | ~6800 ✅ | ~6800〜7300 ✅ |
-
-採点基準：
-
-| 要素数 | 合格 | 良好 | 優秀 |
-|--------|------|------|------|
-| 100 | < 2000 | < 1500 | < 700 |
-| 500 | < 12000 | < 8000 | < 5500 |
 
 ---
 
@@ -444,7 +392,7 @@ mtajima, yusakaki
 
 このプロジェクトでは、以下の用途でAI（Claude）を使用しました：
 
-- **アルゴリズム選定の議論** — radixソート・チャンクソート・Turkish sortの比較検討と、このスタックモデルにおけるトレードオフの整理
+- **アルゴリズム選定の議論/理解** — radixソート・チャンクソート・Turkish sortの比較検討と、アルゴリズムの理解を壁打ち形式で行った。
 - **課題の理解** - subjectの翻訳
 - **README作成** — 翻訳など本ファイル作成の補助
 
