@@ -1,5 +1,4 @@
 NAME		= push_swap
-BONUS_NAME	= checker
 
 CC		= cc
 CFLAGS	= -Wall -Wextra -Werror
